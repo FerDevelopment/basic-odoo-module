@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+
+<odoo>
+    <!-- Esta parte genera el ID que tendrán TODOS los grupos de los cursos -->
+    <record id="module_cursos_category" model="ir.module.category">
+        <field name="name">Cursos</field>
+    </record>
+
+    <!-- Cursos Asistente Group -->
+    <record id="cursos_group_asistente" model="res.groups">
+        <field name="name">Asistente</field>
+        <field name="category_id" ref="module_cursos_category"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Cursos Organizador Group -->
+    <record id="cursos_group_organizador" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="module_cursos_category"/>
+        <field name="implied_ids" eval="[(4, ref('cursos_group_asistente'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+        <!-- Cursos Administrador Group -->
+    <record id="cursos_group_administrador" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="module_cursos_category"/>
+        <field name="implied_ids" eval="[(4, ref('cursos_group_organizador'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+
+<!-- Permisos -->
+    <data noupdate="1">
+
+        <record id="curso_asistente_rule" model="ir.rule">
+            <field name="name">Cursos curso asistente acceso</field>
+            <field name="model_id" ref="model_library_book"/>
+            <field name="domain_force">[('active','=',True)]</field>
+            <field name="groups" eval="[(4,ref('cursos_group_asistente'))]"/>
+        </record>
+
+        <record id="curso_organizador_rule" model="ir.rule">
+            <field name="name">Cursos curso organizador acceso</field>
+            <field name="model_id" ref="model_library_book"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('cursos_group_organizador'))]"/>
+        </record>
+
+           <record id="curso_administrador_rule" model="ir.rule">
+            <field name="name">Cursos curso administrador acceso</field>
+            <field name="model_id" ref="model_library_book"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('cursos_group_administrador'))]"/>
+        </record>
+    </data>
+
+</odoo>
